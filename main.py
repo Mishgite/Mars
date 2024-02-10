@@ -78,5 +78,54 @@ def promotion_image():
                         </html>'''
 
 
+@app.route('/astronaut_selection')
+def astronaut_selection():
+    return f'''<!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>Анкета для астронавтов</title>
+                    </head>
+                    <body>
+                        <h1>Анкета для участия в миссии на Марс</h1>
+                        <form method="POST">
+                            <label>Фамилия:</label>
+                            <input type="text" name="surname"><br><br>
+                    
+                            <label>Имя:</label>
+                            <input type="text" name="first_name"><br><br>
+                    
+                            <label>Email:</label>
+                            <input type="email" name="email"><br><br>
+                    
+                            <label>Образование:</label>
+                            <input type="text" name="education"><br><br>
+                    
+                            <label>Выбор профессии:</label>
+                            <select name="profession">
+                                <option value="engineer_researcher">Инженер-исследователь</option>
+                                <option value="engineer_researcher">пилот</option>
+                                <option value="engineer_researcher">строитель</option>
+                                <option value="engineer_researcher">инженер жизнеобеспечения</option>
+                                <option value="engineer_researcher">штурман</option>
+
+                                </select><br><br>
+                    
+                            <label>Пол:</label>
+                            <input type="radio" name="gender" value="male">Мужской
+                            <input type="radio" name="gender" value="female">Женский<br><br>
+                    
+                            <label>Мотивация:</label><br>
+                            <textarea name="motivation" rows="4" cols="50"></textarea><br><br>
+                    
+                            <label>Готовы ли остаться на Марсе?</label>
+                            <input type="checkbox" name="stay_on_mars" value="Yes">Да<br><br>
+                    
+                            <input type="submit" value="Отправить">
+                        </form>
+                    </body>
+                    </html>
+                    '''
+
+
 if __name__ == '__main__':
     app.run(port=8080, host='127.0.0.1')
