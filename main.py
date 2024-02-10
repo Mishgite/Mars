@@ -1,4 +1,4 @@
-from flask import Flask, url_for
+from flask import Flask, url_for, request
 
 app = Flask(__name__)
 
@@ -125,6 +125,206 @@ def astronaut_selection():
                     </body>
                     </html>
                     '''
+
+
+@app.route('/choice/<planet_name>')
+def choice(planet_name):
+    if planet_name == 'Mercury':
+        return f'''<!doctype html>
+                            <html lang="en">
+                                <head>
+                                <meta charset="utf-8">
+                                <link rel="stylesheet" 
+                                href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" 
+                                integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" 
+                                crossorigin="anonymous">
+                                <link rel="stylesheet" type="text/css" href="{url_for('static', filename='css/style.css')}" />
+                                <title>Варианты выбора</title>
+                                </head>
+                                <body>
+                                <h1>Моё предложение: Меркурий</h1>
+                                <div class="alert alert-danger" role="alert">
+                                  Планета близка к Солнцу, что означает возможность использовать солнечную;
+                                </div>
+                                <div class="alert alert-success" role="alert">
+                                  Благодаря невероятно высоким температурам на дневной стороне, Меркурий может стать идеальным местом для разработки новых методов цифровой обработки материалов.
+                                </div>
+                                <div class="alert alert-dark" role="alert">
+                                  На ней есть небольшое магнитное поле;
+                                </div>
+                                <div class="alert alert-warning" role="alert">
+                                  Колонизация Меркурия открывает дверь к будущему изучения планетарной эволюции и формированию нашей собственной солнечной системы.
+                                </div>
+                                </body>
+                            </html>'''
+    if planet_name == 'Venus':
+        return f'''<!doctype html>
+                            <html lang="en">
+                                <head>
+                                <meta charset="utf-8">
+                                <link rel="stylesheet" 
+                                href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" 
+                                integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" 
+                                crossorigin="anonymous">
+                                <link rel="stylesheet" type="text/css" href="{url_for('static', filename='css/style.css')}" />
+                                <title>Варианты выбора</title>
+                                </head>
+                                <body>
+                                <h1>Моё предложение: Венера</h1>
+                                <div class="alert alert-danger" role="alert">
+                                  Заселение Венеры может предложить уникальную возможность изучения планеты с атмосферой, близкой по составу к Земле. 
+                                </div>
+                                <div class="alert alert-success" role="alert">
+                                  Исследование климата и технологий для выживания на Венере может привести к разработке новых подходов к экологической устойчивости.
+                                </div>
+                                <div class="alert alert-dark" role="alert">
+                                  Венера представляет интерес для научных открытий и технологического развития благодаря своим уникальным геологическим и метеорологическим характеристикам.
+                                </div>
+                                <div class="alert alert-warning" role="alert">
+                                  Колонизация Венеры открывает новые перспективы для расширения границ человеческого присутствия в космосе и познания тайн нашей солнечной системы.
+                                </div>
+                                </body>
+                            </html>'''
+    if planet_name == 'Mars':
+        return f'''<!doctype html>
+                    <html lang="en">
+                        <head>
+                        <meta charset="utf-8">
+                        <link rel="stylesheet" 
+                        href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" 
+                        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" 
+                        crossorigin="anonymous">
+                        <link rel="stylesheet" type="text/css" href="{url_for('static', filename='css/style.css')}" />
+                        <title>Варианты выбора</title>
+                        </head>
+                        <body>
+                        <h1>Моё предложение: Марс</h1>
+                        <div class="alert alert-danger" role="alert">
+                          На ней много необходимых ресурсов;
+                        </div>
+                        <div class="alert alert-success" role="alert">
+                          На ней есть вода и атмосфера;
+                        </div>
+                        <div class="alert alert-dark" role="alert">
+                          На ней есть небольшое магнитное поле;
+                        </div>
+                        <div class="alert alert-warning" role="alert">
+                          Наконец, она просто красива!
+                        </div>
+                        </body>
+                    </html>'''
+    if planet_name == 'Jupiter':
+        return f'''<!doctype html>
+                            <html lang="en">
+                                <head>
+                                <meta charset="utf-8">
+                                <link rel="stylesheet" 
+                                href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" 
+                                integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" 
+                                crossorigin="anonymous">
+                                <link rel="stylesheet" type="text/css" href="{url_for('static', filename='css/style.css')}" />
+                                <title>Варианты выбора</title>
+                                </head>
+                                <body>
+                                <h1>Моё предложение: Юпитер</h1>
+                                <div class="alert alert-danger" role="alert">
+                                  Заселение Юпитера представляет вызовный проект из-за его экстремальных условий, но может принести важные научные открытия.
+                                </div>
+                                <div class="alert alert-success" role="alert">
+                                  Исследование газового гиганта открывает путь к пониманию формирования планет и атмосфер в нашей галактике.
+                                </div>
+                                <div class="alert alert-dark" role="alert">
+                                  Юпитер является возможным исследовательским центром для разработки технологий выживания в условиях высокого давления и радиации.
+                                </div>
+                                <div class="alert alert-warning" role="alert">
+                                  Колонизация Юпитера может стать толчком для развития космических исследований и будущих межпланетных миссий.
+                                </div>
+                                </body>
+                            </html>'''
+    if planet_name == 'Saturn':
+        return f'''<!doctype html>
+                            <html lang="en">
+                                <head>
+                                <meta charset="utf-8">
+                                <link rel="stylesheet" 
+                                href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" 
+                                integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" 
+                                crossorigin="anonymous">
+                                <link rel="stylesheet" type="text/css" href="{url_for('static', filename='css/style.css')}" />
+                                <title>Варианты выбора</title>
+                                </head>
+                                <body>
+                                <h1>Моё предложение: Сатурн</h1>
+                                <div class="alert alert-danger" role="alert">
+                                  Заселение Сатурна предоставит уникальную возможность исследования кольца и спутников газового гиганта, что поможет расширить наше понимание формирования планет. 
+                                </div>
+                                <div class="alert alert-success" role="alert">
+                                  Наличие ресурсов и потенциал использования энергии от Солнца делает Сатурн привлекательным объектом для колонизации и исследований.
+                                </div>
+                                <div class="alert alert-dark" role="alert">
+                                  Развитие новых технологий для пребывания в экстремальных условиях планеты может позитивно сказаться на развитии космической инженерии.
+                                </div>
+                                <div class="alert alert-warning" role="alert">
+                                  Колонизация Сатурна может открыть новые горизонты для научных открытий и поиска ответов на важные вопросы о происхождении солнечной системы.
+                                </div>
+                                </body>
+                            </html>'''
+    if planet_name == 'Uranus':
+        return f'''<!doctype html>
+                            <html lang="en">
+                                <head>
+                                <meta charset="utf-8">
+                                <link rel="stylesheet" 
+                                href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" 
+                                integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" 
+                                crossorigin="anonymous">
+                                <link rel="stylesheet" type="text/css" href="{url_for('static', filename='css/style.css')}" />
+                                <title>Варианты выбора</title>
+                                </head>
+                                <body>
+                                <h1>Моё предложение: Уран</h1>
+                                <div class="alert alert-danger" role="alert">
+                                  Заселение Урана представляет инновационный вызов с уникальными атмосферными и геологическими особенностями, что может привести к совершению важных научных открытий. 
+                                </div>
+                                <div class="alert alert-success" role="alert">
+                                  Исследование данной планеты способствует расширению нашего понимания газовых гигантов и процессов, протекающих в их атмосферах.
+                                </div>
+                                <div class="alert alert-dark" role="alert">
+                                  Возможности для разработки технологий адаптации к суровым условиям Урана могут способствовать развитию космической индустрии.
+                                </div>
+                                <div class="alert alert-warning" role="alert">
+                                 Присутствие ресурсов и уникальных особенностей Урана представляет перспективы для научных исследований и будущего расширения нашего присутствия в космосе.
+                                </div>
+                                </body>
+                            </html>'''
+    if planet_name == 'Neptune':
+        return f'''<!doctype html>
+                            <html lang="en">
+                                <head>
+                                <meta charset="utf-8">
+                                <link rel="stylesheet" 
+                                href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" 
+                                integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" 
+                                crossorigin="anonymous">
+                                <link rel="stylesheet" type="text/css" href="{url_for('static', filename='css/style.css')}" />
+                                <title>Варианты выбора</title>
+                                </head>
+                                <body>
+                                <h1>Моё предложение: Нептун</h1>
+                                <div class="alert alert-danger" role="alert">
+                                  Заселение Нептуна предоставит возможность изучения дальнего газового гиганта и его уникальных характеристик, что способствует расширению научных знаний о внешних планетах.
+                                </div>
+                                <div class="alert alert-success" role="alert">
+                                  Нептун является объектом интереса для исследования формирования Холодного гиганта и его атмосферы.
+                                </div>
+                                <div class="alert alert-dark" role="alert">
+                                  Развитие инновационных технологий для приспособления к холодным и ветреным условиям Нептуна может сыграть ключевую роль в развитии космической инженерии.
+                                </div>
+                                <div class="alert alert-warning" role="alert">
+                                 Колонизация Нептуна может открыть новые перспективы в научных исследованиях космоса и помочь понять процессы, лежащие в основе формирования внешних планет.
+                                </div>
+                                </body>
+                            </html>'''
 
 
 if __name__ == '__main__':
