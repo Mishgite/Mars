@@ -326,6 +326,7 @@ def choice(planet_name):
                                 </body>
                             </html>'''
 
+
 @app.route('/results/<nickname>/<int:level>/<float:rating>')
 def results(nickname, level, rating):
     return f'''<!doctype html>
@@ -355,6 +356,77 @@ def results(nickname, level, rating):
                                 </div>
                                 </body>
                             </html>'''
+
+
+@app.route('/carousel')
+def carousel():
+    return f'''<!DOCTYPE html>
+                        <html>  
+                        <head>
+                            <!--Add pre compiled library files -->
+                            <!--Automatics css and js adder-->
+                            <!--auto compiled css & Js-->
+                            <script type="text/javascript"
+                                    src="//code.jquery.com/jquery-1.9.1.js">
+                        </script>
+                            <link rel="stylesheet"
+                                type="text/css"
+                                href="/css/result-light.css">
+                            <script type="text/javascript"
+                                    src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js">
+                        </script>
+                            <link rel="stylesheet"
+                                type="text/css"
+                                href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+                            <link rel="stylesheet"
+                                type="text/css"
+                                href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+                        </head>
+                        <body>
+                            <!-- create a bootstrap card in a container-->
+                            <div class="container">
+                                <!--Bootstrap card with slider class-->
+                                <div id="carousel-demo"
+                                    class="carousel slide"
+                                    data-ride="carousel">
+                                    <div class="carousel-inner">
+                                        <div class="item">
+                                            <img src=
+                        "{url_for('static', filename='img/mars1.jpg')}">
+                                        </div>
+                                        <div class="item">
+                                            <img src=
+                        "{url_for('static', filename='img/mars2.jpg')}">
+                                        </div>
+                                        <div class="item active">
+                                            <img src=
+                        "{url_for('static', filename='img/mars3.jpg')}">
+                                        </div>
+                                        <div class="item">
+                                            <img src=
+                        "{url_for('static', filename='img/mars4.jpg')}">
+                                        </div>
+                                    </div>
+                                    <!--slider control for card-->
+                                    <a class="left carousel-control"
+                                    href="#carousel-demo"
+                                    data-slide="prev">
+                                        <span class="glyphicon glyphicon-chevron-left">
+                                    </span>
+                                    </a>
+                                    <a class="right carousel-control"
+                                    href="#carousel-demo"
+                                    data-slide="next">
+                                        <span class="glyphicon glyphicon-chevron-right">
+                                    </span>
+                                    </a>
+                                </div>
+                            </div>
+                        </body>
+                        </html>
+
+
+    '''
 
 
 if __name__ == '__main__':
