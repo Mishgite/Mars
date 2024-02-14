@@ -1,4 +1,4 @@
-from flask import Flask, url_for, request
+from flask import Flask, url_for, request, render_template
 
 app = Flask(__name__)
 
@@ -6,11 +6,6 @@ app = Flask(__name__)
 @app.route('/')
 def mission():
     return 'Миссия Колонизация Марса'
-
-
-@app.route('/index')
-def index():
-    return "И на Марсе будут яблони цвести!"
 
 
 @app.route('/promotion')
@@ -427,6 +422,14 @@ def carousel():
 
 
     '''
+
+
+@app.route('/index')
+def index():
+    user = "Ученик Яндекс.Лицея"
+    return render_template('base.html', index=user)
+
+
 
 
 if __name__ == '__main__':
