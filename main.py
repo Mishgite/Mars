@@ -430,6 +430,11 @@ def index():
     return render_template('base.html', index=user)
 
 
+@app.route('/training/<prof>')
+def training(prof):
+    return render_template('base.html', index='колонист', porf=prof)
+
+
 
 
 if __name__ == '__main__':
