@@ -505,5 +505,16 @@ def auto_answer():
     return render_template('auto_answer.html', **user_data)
 
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        astronaut_id = request.form['astronaut_id']
+        astronaut_password = request.form['astronaut_password']
+        captain_id = request.form['captain_id']
+        captain_token = request.form['captain_token']
+
+    return render_template('auth_form.html')
+
+
 if __name__ == '__main__':
     app.run(port=8080, host='127.0.0.1')

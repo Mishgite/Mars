@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <img src="/static/img/mission_emblem.png"><h2>Аварийный доступ</h2>
+    <form method="post" action="/authenticate">
+        <label for="astronaut_id">Id астронавта</label>
+        <input type="text" id="astronaut_id" name="astronaut_id"><br><br>
+
+        <label for="astronaut_password">Пароль астронавта</label>
+        <input type="password" id="astronaut_password" name="astronaut_password"><br><br>
+
+        <label for="captain_id">Id капитана</label>
+        <input type="text" id="captain_id" name="captain_id"><br><br>
+
+        <label for="captain_token">Пароль капитана</label>
+        <input type="password" id="captain_token" name="captain_token"><br><br>
+
+        <input type="submit" value="Доступ">
+    </form>
+</div>
+{% endblock %}
