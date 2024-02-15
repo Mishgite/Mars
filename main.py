@@ -477,5 +477,33 @@ def list_prof(list):
     return render_template('base.html', index='колонист', list=list, spisok=spisok)
 
 
+@app.route('/answer')
+def answer():
+    user_data = {
+        'surname': 'Smith',
+        'name': 'John',
+        'education': 'Магистр космической инженерии',
+        'profession': 'Астронавт',
+        'sex': 'Мужской',
+        'motivation': 'Исследование неизвестного',
+        'ready': 'Да'
+    }
+    return render_template('auto_answer.html', **user_data)
+
+
+@app.route('/auto_answer')
+def auto_answer():
+    user_data = {
+        'surname': 'Doe',
+        'name': 'Jane',
+        'education': ' Доктор философии в области астробиологии',
+        'profession': 'Астрофизик',
+        'sex': 'Женский',
+        'motivation': 'Освоение космоса и научные исследования',
+        'ready': 'Да'
+    }
+    return render_template('auto_answer.html', **user_data)
+
+
 if __name__ == '__main__':
     app.run(port=8080, host='127.0.0.1')
