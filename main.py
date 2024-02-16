@@ -564,5 +564,12 @@ def distribute_astronauts():
     return render_template('astronaut_distribution.html', astronauts=astronaut_list)
 
 
+@app.route('/table')
+def room_design():
+    gender = request.args.get('gender', 'male')
+    age = int(request.args.get('age', 25))
+    return render_template('room_design.html', gender=gender, age=age)
+
+
 if __name__ == '__main__':
     app.run(port=8080, host='127.0.0.1')

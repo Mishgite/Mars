@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Оформление каюты</h2>
+    <table>
+        <tr>
+            <th>Цвет стен</th>
+            <th>Изображение</th>
+        </tr>
+        <tr>
+            <td style="background-color: {% if gender == 'male' %}{% if age < 21 %}blue{% else %}lightblue{% endif %}{% else %}{% if age < 21 %}pink{% else %}lightpink{% endif %}{% endif %};"></td>
+            <td><img src="{% if age < 21 %}/static/img/child_martian.png{% else %}/static/img/adult_martian.png{% endif %}" alt="Martian Image"></td>
+        </tr>
+    </table>
+{% endblock %}
