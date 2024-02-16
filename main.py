@@ -353,6 +353,48 @@ def results(nickname, level, rating):
                             </html>'''
 
 
+image = ''
+
+
+@app.route('/load_photo', methods=['POST', 'GET'])
+def form_sample():
+    global image
+    if request.method == 'POST':
+        f = request.files['file']
+        with open('static/img/test_image_01.png', 'wb') as img_file:
+            img_file.write(f.read())
+        image = 'static/img/test_image_01.png'
+
+    return r'''<!doctype html>
+                    <html lang="en">
+                      <head>
+                        <meta charset="utf-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+                        <link rel="stylesheet"
+                        href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+                        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+                        crossorigin="anonymous">
+                        <link rel="stylesheet" type="text/css" href="static/css/style.css">
+                        <title>Отбор астронавтов</title>
+                      </head>
+                      <body>
+                        <h1>Загрузка фотографии</h1>
+                        <h3>для участия в миссии</h3>
+                        <div>
+                            <form class="select_form" method="post" enctype="multipart/form-data"> 
+                                <div class="form-group">
+                                    <label for="photo">Приложите фотографию</label><br>
+                                    <input type="file" class="form-control-file" id="photo" name="file">
+                                </div>
+                                <br>
+                                {image_or_not}
+                                <button type="submit" class="btn btn-primary">Отправить</button>
+                            </form>
+                        </div>
+                      </body>
+                    </html>'''.format(image_or_not='<img src="static/img/test_image_01.png" width=400 alt="здесь должна была быть картинка, но не нашлась">' if image else '')
+
+
 @app.route('/carousel')
 def carousel():
     return f'''<!DOCTYPE html>
