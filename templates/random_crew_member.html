@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Случайный член экипажа</h2>
+    <img src="{{ random_crew_member.photo }}" alt="{{ random_crew_member.firstName }} {{ random_crew_member.lastName }}">
+    <p><strong>Профессия:</strong></p>
+    <ul>
+        {% for specialty in random_crew_member.specialties|sort %}
+            <li>{{ specialty }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

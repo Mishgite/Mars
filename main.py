@@ -1,4 +1,7 @@
 from flask import Flask, url_for, request, render_template
+import json
+import random
+
 
 app = Flask(__name__)
 
@@ -569,6 +572,17 @@ def room_design():
     gender = request.args.get('gender', 'male')
     age = int(request.args.get('age', 25))
     return render_template('room_design.html', gender=gender, age=age)
+
+
+with open('templates/crew.json', 'r') as file:
+    crew_data = json.load(file)
+    crew_members = crew_data['crew_members']
+
+
+@app.route('/member')
+def random_crew_member():
+    random_member = random.choice(crew_members)
+    return render_template('random_crew_member.html', random_crew_member=random_member)
 
 
 if __name__ == '__main__':

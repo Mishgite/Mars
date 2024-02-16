@@ -1,0 +1,22 @@
+{
+    "crew_members": [
+        {
+            "firstName": "John",
+            "lastName": "Smith",
+            "photo": "static/img/john_smith.png",
+            "specialties": ["Engineer", "Pilot"]
+        },
+        {
+            "firstName": "Jane",
+            "lastName": "Doe",
+            "photo": "static/img/jane_doe.png",
+            "specialties": ["Biologist", "Physicist"]
+        },
+        {
+            "firstName": "Alex",
+            "lastName": "Johnson",
+            "photo": "static/img/alex_johnson.png",
+            "specialties": ["Doctor", "Medic"]
+        }
+    ]
+}
