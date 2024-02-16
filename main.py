@@ -516,5 +516,11 @@ def login():
     return render_template('auth_form.html')
 
 
+@app.route('/distribution')
+def distribute_astronauts():
+    astronaut_list = ['Captain Scott', 'Astronaut Johnson', 'Astronaut Smith', 'Astronaut Lee']
+    return render_template('astronaut_distribution.html', astronauts=astronaut_list)
+
+
 if __name__ == '__main__':
     app.run(port=8080, host='127.0.0.1')
