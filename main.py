@@ -599,6 +599,22 @@ def random_crew_member():
     return render_template('random_crew_member.html', random_crew_member=random_member)
 
 
+urls = ['static/img/mars1.jpg',
+        'static/img/mars2.jpg',
+        'static/img/mars3.jpg']
+
+
+@app.route('/galery', methods=['GET', 'POST'])
+def galery():
+    if request.method == 'POST':
+        f = request.files['file']
+        with open(f'static/img/mars{len(urls) - 3}.png', 'wb') as img_file:
+            img_file.write(f.read())
+        urls.append(f'static/img/mars{len(urls) - 3}.png')
+
+    return render_template('galery.html', title='Галерея с добавлением', urls=urls)
+
+
 if __name__ == '__main__':
     app.config['SECRET_KEY'] = 'random_key'
     app.run(port=8080, host='127.0.0.1')
