@@ -1,18 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Access Form</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block content %}
+    <img src="/static/img/mission_emblem.png" alt="MARS">
     <h2>Access Control Form</h2>
     <form method="post">
-        {{ form.hidden_tag() }}  <!-- Для CSRF защиты -->
+        {{ form.hidden_tag() }}
         <p>{{ form.astronaut_id.label }}<br>{{ form.astronaut_id }}</p>
         <p>{{ form.astronaut_password.label }}<br>{{ form.astronaut_password }}</p>
         <p>{{ form.captain_id.label }}<br>{{ form.captain_id }}</p>
         <p>{{ form.captain_token.label }}<br>{{ form.captain_token }}</p>
         <p>{{ form.submit }}</p>
     </form>
-</body>
-</html>
+{% endblock %}

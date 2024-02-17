@@ -1,12 +1,19 @@
-h1 {
-    padding: 5px;
-    background-color: #e6e6e6;
+h4{
+    color: #008000;
 }
-h4 {
+p{
     padding-left: 20px;
-    color: #e6e6e6;
 }
-tr.mn {
-    text-align: center;
-    background-color: #e6e6e6;
+.container {
+    margin: 20px;
 }
+table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+th, td {
+     border: 1px solid black;
+     padding: 10px;
+     text-align: center;
+    }

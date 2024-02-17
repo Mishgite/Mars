@@ -569,7 +569,7 @@ def access():
     form = AccessForm()
     if form.validate_on_submit():
         return redirect(url_for('success'))
-    return render_template('access_form.html', form=form)
+    return render_template('auth_form.html', form=form)
 
 
 @app.route('/success')
@@ -600,4 +600,5 @@ def random_crew_member():
 
 
 if __name__ == '__main__':
+    app.config['SECRET_KEY'] = 'random_key'
     app.run(port=8080, host='127.0.0.1')
