@@ -1,9 +1,12 @@
-from flask import Flask, url_for, request, render_template
+from flask import Flask, url_for, request, render_template, redirect
 import json
 import random
+import os
 
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = 'static/img'
+app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 
 
 @app.route('/')
@@ -471,13 +474,13 @@ def carousel():
 
 @app.route('/index')
 def index():
-    user = "Ученик Яндекс.Лицея"
+    user = "заготовка"
     return render_template('base.html', index=user)
 
 
 @app.route('/training/<prof>')
 def training(prof):
-    return render_template('base.html', index='колонист', porf=prof)
+    return render_template('training_simulators.html', index='колонист', porf=prof)
 
 
 @app.route('/list_prof/<list>')

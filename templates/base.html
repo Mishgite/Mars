@@ -11,24 +11,6 @@
     <h4>И на Марсе будут яблони цвести!</h4>
     <main role="main" class="container">
     {% block content %}{% endblock %}
-    {% if 'инженер' in porf %}
-        <img src="\static\img\ingen.png" alt="здесь должна была быть картинка, но не нашлась">
-    {% elif 'строитель' in porf %}
-        <img src="\static\img\med.png" alt="здесь должна была быть картинка, но не нашлась">
-    {% endif %}
-    {% if list == 'ul'%}
-        {% for user in spisok %}
-            <li>{{ loop.index }} - {{ user }}
-            </li>
-        {% endfor %}
-    {% endif %}
-    {% if list == 'ol'%}
-    <ul>
-        {% for user in spisok %}
-            <li>{{ user }}
-            </li>
-        </ul>
-        {% endfor %}
-    {% endif %}
+
 </body>
 </html>
