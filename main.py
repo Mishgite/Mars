@@ -522,7 +522,7 @@ def list_prof(list):
               'Страховой агент', 'Композитор', 'Повар', 'Биотехнолог', 'Учитель права', 'Полицейский',
               'Монтажер телерадиовещательных компаний', 'Сценарист', 'Тестер', 'Архитектор-реставратор',
               'Специалист по недвижимости']
-    return render_template('base.html', index='колонист', list=list, spisok=spisok)
+    return render_template('list_professionals.html', list=list, spisok=spisok)
 
 
 @app.route('/answer')

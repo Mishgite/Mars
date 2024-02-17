@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+{% if list == 'ul'%}
+        {% for user in spisok %}
+            <li>{{ loop.index }} - {{ user }}
+            </li>
+        {% endfor %}
+    {% endif %}
+    {% if list == 'ol'%}
+    <ul>
+        {% for user in spisok %}
+            <li>{{ user }}
+            </li>
+        </ul>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
