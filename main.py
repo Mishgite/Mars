@@ -2,6 +2,9 @@ from flask import Flask, url_for, request, render_template, redirect
 import json
 import random
 import os
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import DataRequired
+from flask_wtf import FlaskForm
 
 
 app = Flask(__name__)
@@ -553,15 +556,25 @@ def auto_answer():
     return render_template('auto_answer.html', **user_data)
 
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        astronaut_id = request.form['astronaut_id']
-        astronaut_password = request.form['astronaut_password']
-        captain_id = request.form['captain_id']
-        captain_token = request.form['captain_token']
+class AccessForm(FlaskForm):
+    astronaut_id = StringField('Astronaut ID', validators=[DataRequired()])
+    astronaut_password = PasswordField('Astronaut Password', validators=[DataRequired()])
+    captain_id = StringField('Captain ID', validators=[DataRequired()])
+    captain_token = PasswordField('Captain Token', validators=[DataRequired()])
+    submit = SubmitField('Login')
 
-    return render_template('auth_form.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def access():
+    form = AccessForm()
+    if form.validate_on_submit():
+        return redirect(url_for('success'))
+    return render_template('access_form.html', form=form)
+
+
+@app.route('/success')
+def success():
+    return 'Access granted. Welcome aboard!'
 
 
 @app.route('/distribution')
@@ -570,11 +583,9 @@ def distribute_astronauts():
     return render_template('astronaut_distribution.html', astronauts=astronaut_list)
 
 
-@app.route('/table')
-def room_design():
-    gender = request.args.get('gender', 'male')
-    age = int(request.args.get('age', 25))
-    return render_template('room_design.html', gender=gender, age=age)
+@app.route('/table/<gender>/<age>')
+def room_design(gender, age):
+    return render_template('room_design.html', gender=gender, age=int(age))
 
 
 with open('templates/crew.json', 'r') as file:
