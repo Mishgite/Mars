@@ -1,10 +1,15 @@
 from flask import Flask, url_for, request, render_template, redirect
+import sqlalchemy
 import json
 import random
-import os
+from data.db_session import SqlAlchemyBase
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from requests import session
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired
 from flask_wtf import FlaskForm
+import datetime
 
 
 app = Flask(__name__)
@@ -613,6 +618,54 @@ def galery():
         urls.append(f'static/img/mars{len(urls) - 3}.png')
 
     return render_template('galery.html', title='Галерея с добавлением', urls=urls)
+
+
+engine = sqlalchemy.create_engine('sqlite:///db/mars_explorer.db')
+Base = declarative_base()
+Base.metadata.create_all(engine)
+
+DBSession = sessionmaker(bind=engine)
+session = DBSession()
+
+
+class User(SqlAlchemyBase):
+    __tablename__ = 'users'
+
+    id = sqlalchemy.Column(sqlalchemy.Integer,
+                           primary_key=True, autoincrement=True)
+    surname = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    age = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
+    position = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    speciality = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    address = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    email = sqlalchemy.Column(sqlalchemy.String,
+                              index=True, unique=True, nullable=True)
+    hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    modified_date = sqlalchemy.Column(sqlalchemy.DateTime,
+                                      default=datetime.datetime.now)
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        password = request.form['password']
+        user = User()
+        user.surname = request.form['surname']
+        user.name = request.form['name']
+        user.age = request.form['age']
+        user.position = request.form['position']
+        user.speciality = request.form['speciality']
+        user.address = request.form['address']
+        user.email = request.form['login']
+        user.hashed_password = request.form['confirm_password']
+        session.add(user)
+        session.commit()
+        session.close()
+
+        return 'Registration successful'
+
+    return render_template('register.html')
 
 
 if __name__ == '__main__':
