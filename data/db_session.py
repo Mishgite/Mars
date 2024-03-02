@@ -1,15 +1,11 @@
 import sqlalchemy as sa
 import sqlalchemy.orm as orm
 from sqlalchemy.orm import Session
-<<<<<<< HEAD
-
-SqlAlchemyBase = orm.declarative_base()
-=======
 import sqlalchemy.ext.declarative as dec
 
-SqlAlchemyBase = dec.declarative_base()
+SqlAlchemyBase = orm.declarative_base()
 
->>>>>>> origin/main
+SqlAlchemyBase = dec.declarative_base()
 
 __factory = None
 
