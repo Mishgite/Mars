@@ -571,13 +571,6 @@ class AccessForm(FlaskForm):
     submit = SubmitField('Login')
 
 
-@app.route('/login', methods=['GET', 'POST'])
-def access():
-    form = AccessForm()
-    if form.validate_on_submit():
-        return redirect(url_for('success'))
-    return render_template('auth_form.html', form=form)
-
 
 @app.route('/success')
 def success():
