@@ -1,22 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
-    <img src="/static/img/mission_emblem.png"><h2>Аварийный доступ</h2>
-    <form method="post" action="/authenticate">
-        <label for="astronaut_id">Id астронавта</label>
-        <input type="text" id="astronaut_id" name="astronaut_id"><br><br>
-
-        <label for="astronaut_password">Пароль астронавта</label>
-        <input type="password" id="astronaut_password" name="astronaut_password"><br><br>
-
-        <label for="captain_id">Id капитана</label>
-        <input type="text" id="captain_id" name="captain_id"><br><br>
-
-        <label for="captain_token">Пароль капитана</label>
-        <input type="password" id="captain_token" name="captain_token"><br><br>
-
-        <input type="submit" value="Доступ">
+    <img src="/static/img/mission_emblem.png" alt="MARS">
+    <h2>Access Control Form</h2>
+    <form method="post">
+        {{ form.hidden_tag() }}
+        <p>{{ form.astronaut_id.label }}<br>{{ form.astronaut_id }}</p>
+        <p>{{ form.astronaut_password.label }}<br>{{ form.astronaut_password }}</p>
+        <p>{{ form.captain_id.label }}<br>{{ form.captain_id }}</p>
+        <p>{{ form.captain_token.label }}<br>{{ form.captain_token }}</p>
+        <p>{{ form.submit }}</p>
     </form>
-</div>
 {% endblock %}

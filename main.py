@@ -1,9 +1,20 @@
-from flask import Flask, url_for, request, render_template
+from flask import Flask, url_for, request, render_template, redirect
+import sqlalchemy
 import json
 import random
+from data.db_session import SqlAlchemyBase
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from requests import session
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import DataRequired
+from flask_wtf import FlaskForm
+import datetime
 
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = 'static/img'
+app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 
 
 @app.route('/')
@@ -471,13 +482,13 @@ def carousel():
 
 @app.route('/index')
 def index():
-    user = "Ученик Яндекс.Лицея"
+    user = "заготовка"
     return render_template('base.html', index=user)
 
 
 @app.route('/training/<prof>')
 def training(prof):
-    return render_template('base.html', index='колонист', porf=prof)
+    return render_template('training_simulators.html', index='колонист', porf=prof)
 
 
 @app.route('/list_prof/<list>')
@@ -519,7 +530,7 @@ def list_prof(list):
               'Страховой агент', 'Композитор', 'Повар', 'Биотехнолог', 'Учитель права', 'Полицейский',
               'Монтажер телерадиовещательных компаний', 'Сценарист', 'Тестер', 'Архитектор-реставратор',
               'Специалист по недвижимости']
-    return render_template('base.html', index='колонист', list=list, spisok=spisok)
+    return render_template('list_professionals.html', list=list, spisok=spisok)
 
 
 @app.route('/answer')
@@ -550,15 +561,25 @@ def auto_answer():
     return render_template('auto_answer.html', **user_data)
 
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        astronaut_id = request.form['astronaut_id']
-        astronaut_password = request.form['astronaut_password']
-        captain_id = request.form['captain_id']
-        captain_token = request.form['captain_token']
+class AccessForm(FlaskForm):
+    astronaut_id = StringField('Astronaut ID', validators=[DataRequired()])
+    astronaut_password = PasswordField('Astronaut Password', validators=[DataRequired()])
+    captain_id = StringField('Captain ID', validators=[DataRequired()])
+    captain_token = PasswordField('Captain Token', validators=[DataRequired()])
+    submit = SubmitField('Login')
 
-    return render_template('auth_form.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def access():
+    form = AccessForm()
+    if form.validate_on_submit():
+        return redirect(url_for('success'))
+    return render_template('auth_form.html', form=form)
+
+
+@app.route('/success')
+def success():
+    return 'Access granted. Welcome aboard!'
 
 
 @app.route('/distribution')
@@ -567,11 +588,9 @@ def distribute_astronauts():
     return render_template('astronaut_distribution.html', astronauts=astronaut_list)
 
 
-@app.route('/table')
-def room_design():
-    gender = request.args.get('gender', 'male')
-    age = int(request.args.get('age', 25))
-    return render_template('room_design.html', gender=gender, age=age)
+@app.route('/table/<gender>/<age>')
+def room_design(gender, age):
+    return render_template('room_design.html', gender=gender, age=int(age))
 
 
 with open('templates/crew.json', 'r') as file:
@@ -585,5 +604,70 @@ def random_crew_member():
     return render_template('random_crew_member.html', random_crew_member=random_member)
 
 
+urls = ['static/img/mars1.jpg',
+        'static/img/mars2.jpg',
+        'static/img/mars3.jpg']
+
+
+@app.route('/galery', methods=['GET', 'POST'])
+def galery():
+    if request.method == 'POST':
+        f = request.files['file']
+        with open(f'static/img/mars{len(urls) - 3}.png', 'wb') as img_file:
+            img_file.write(f.read())
+        urls.append(f'static/img/mars{len(urls) - 3}.png')
+
+    return render_template('galery.html', title='Галерея с добавлением', urls=urls)
+
+
+engine = sqlalchemy.create_engine('sqlite:///db/mars_explorer.db')
+Base = declarative_base()
+Base.metadata.create_all(engine)
+
+DBSession = sessionmaker(bind=engine)
+session = DBSession()
+
+
+class User(SqlAlchemyBase):
+    __tablename__ = 'users'
+
+    id = sqlalchemy.Column(sqlalchemy.Integer,
+                           primary_key=True, autoincrement=True)
+    surname = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    age = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
+    position = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    speciality = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    address = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    email = sqlalchemy.Column(sqlalchemy.String,
+                              index=True, unique=True, nullable=True)
+    hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    modified_date = sqlalchemy.Column(sqlalchemy.DateTime,
+                                      default=datetime.datetime.now)
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        password = request.form['password']
+        user = User()
+        user.surname = request.form['surname']
+        user.name = request.form['name']
+        user.age = request.form['age']
+        user.position = request.form['position']
+        user.speciality = request.form['speciality']
+        user.address = request.form['address']
+        user.email = request.form['login']
+        user.hashed_password = request.form['confirm_password']
+        session.add(user)
+        session.commit()
+        session.close()
+
+        return 'Registration successful'
+
+    return render_template('register.html')
+
+
 if __name__ == '__main__':
+    app.config['SECRET_KEY'] = 'random_key'
     app.run(port=8080, host='127.0.0.1')
