@@ -2,6 +2,7 @@ from flask import Flask, url_for, request, render_template, redirect
 import sqlalchemy
 import json
 import random
+import sqlite3
 from data import db_session
 from data.db_session import SqlAlchemyBase
 from sqlalchemy.ext.declarative import declarative_base
@@ -18,13 +19,14 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/img'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 
+current_user = {
+        'is_authenticated': '',
+        'name': ''
+    }
+
 
 @app.route('/')
 def mission():
-    current_user = {
-        'is_authenticated': '',
-        'name': 'rdhf'
-    }
     return render_template('main.html', current_user=current_user)
 
 
@@ -676,6 +678,7 @@ class LoginForm(FlaskForm):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    global current_user
     form = LoginForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
@@ -686,6 +689,9 @@ def login():
         return render_template('login.html',
                                message="Неправильный логин или пароль",
                                form=form)
+    if request.method == 'POST':
+        current_user['name'] = request.form['form-control']
+        current_user['is_authenticated'] = request.form['form-control1']
     return render_template('login.html', title='Авторизация', form=form)
 
 
