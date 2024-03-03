@@ -21,7 +21,11 @@ app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 
 @app.route('/')
 def mission():
-    return 'Миссия Колонизация Марса'
+    current_user = {
+        'is_authenticated': '',
+        'name': 'rdhf'
+    }
+    return render_template('main.html', current_user=current_user)
 
 
 @app.route('/promotion')
