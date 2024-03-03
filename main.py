@@ -19,14 +19,19 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/img'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 
-current_user = {
-        'is_authenticated': '',
-        'name': ''
-    }
+
+def get_jobs_from_db(name):
+    conn = sqlite3.connect(f'db/{name}')
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM users")
+    jobs = cursor.fetchall()
+    conn.close()
+    return jobs
 
 
 @app.route('/')
 def mission():
+    current_user = get_jobs_from_db('users.db')
     return render_template('main.html', current_user=current_user)
 
 
@@ -669,6 +674,21 @@ def register():
     return render_template('register.html')
 
 
+engine = sqlalchemy.create_engine('sqlite:///db/users.db')
+Base = declarative_base()
+Base.metadata.create_all(engine)
+
+DBSession = sessionmaker(bind=engine)
+session = DBSession()
+
+
+class Users(SqlAlchemyBase):
+    __tablename__ = 'users'
+    id = sqlalchemy.Column(sqlalchemy.Integer,
+                           primary_key=True, autoincrement=True)
+    username = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+
 class LoginForm(FlaskForm):
     email = EmailField('Почта', validators=[DataRequired()])
     password = PasswordField('Пароль', validators=[DataRequired()])
@@ -690,8 +710,12 @@ def login():
                                message="Неправильный логин или пароль",
                                form=form)
     if request.method == 'POST':
-        current_user['name'] = request.form['form-control']
-        current_user['is_authenticated'] = request.form['form-control1']
+        user = Users()
+        user.username = request.form['form-control']
+        user.password = request.form['form-control1']
+        session.add(user)
+        session.commit()
+        session.close()
     return render_template('login.html', title='Авторизация', form=form)
 
 
