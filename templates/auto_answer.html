@@ -1,12 +1,11 @@
 {% extends "base.html" %}
+
 {% block content %}
-<div class="container">
-    <p><strong>Фамилия:</strong> {{ surname }}</p>
-    <p><strong>Имя:</strong> {{ name }}</p>
-    <p><strong>Образование:</strong> {{ education }}</p>
-    <p><strong>Профессия:</strong> {{ profession }}</p>
-    <p><strong>Пол:</strong> {{ sex }}</p>
-    <p><strong>Мотивация:</strong> {{ motivation }}</p>
-    <p><strong>Готов:</strong> {{ ready }}</p>
-</div>
+    <p>Фамилия: {{ surname }}</p>
+    <p>Имя: {{ name }}</p>
+    <p>Образование: {{ education }}</p>
+    <p>Профессия: {{ profession }}</p>
+    <p>Пол: {{ sex }}</p>
+    <p>Мотвация: {{ motivation }}</p>
+    <p>Готовы остаться на Марсе? {{ ready }}</p>
 {% endblock %}
