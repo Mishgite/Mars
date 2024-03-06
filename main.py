@@ -149,7 +149,7 @@ def login():
     if current_user.is_authenticated:
         return redirect('/')
 
-    if form.validate_on_submit():
+    if request.method == 'POST':
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.email == form.email.data).first()
         if user and user.check_password(form.password.data):
