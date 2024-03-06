@@ -3,15 +3,16 @@ import sqlalchemy
 import json
 import random
 import sqlite3
+from sqlalchemy import orm
 from data import db_session
 from data.db_session import SqlAlchemyBase
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from requests import session
 from wtforms import StringField, PasswordField, SubmitField, EmailField, BooleanField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Email
 from flask_wtf import FlaskForm
-from flask_login import login_user
+from flask_login import login_user, current_user
 import datetime
 
 
@@ -29,10 +30,30 @@ def get_jobs_from_db(name):
     return jobs
 
 
+db_session.global_init('db/database.db')
+db_sess = db_session.create_session()
+
+
+class Job(SqlAlchemyBase):
+    __tablename__ = 'jobs'
+
+    id = sqlalchemy.Column(sqlalchemy.Integer,
+                           primary_key=True, autoincrement=True)
+    team_leader_id = sqlalchemy.Column(sqlalchemy.Integer,
+                                       sqlalchemy.ForeignKey("users.id"))
+    team_leader = orm.relationship('User')
+    job = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    work_size = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
+    collaborators = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    start_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now())
+    end_date = sqlalchemy.Column(sqlalchemy.DateTime)
+    is_finished = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+
+
 @app.route('/')
-def mission():
-    current_user = get_jobs_from_db('users.db')
-    return render_template('main.html', current_user=current_user)
+def works_log():
+    jobs = db_sess.query(Job).all()
+    return render_template('jobs.html', title='Журнал работ', jobs=jobs)
 
 
 @app.route('/promotion')
@@ -674,49 +695,30 @@ def register():
     return render_template('register.html')
 
 
-engine = sqlalchemy.create_engine('sqlite:///db/users.db')
-Base = declarative_base()
-Base.metadata.create_all(engine)
-
-DBSession = sessionmaker(bind=engine)
-session = DBSession()
-
-
-class Users(SqlAlchemyBase):
-    __tablename__ = 'users'
-    id = sqlalchemy.Column(sqlalchemy.Integer,
-                           primary_key=True, autoincrement=True)
-    username = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-
 class LoginForm(FlaskForm):
-    email = EmailField('Почта', validators=[DataRequired()])
-    password = PasswordField('Пароль', validators=[DataRequired()])
+    email = EmailField('Почта', validators=[DataRequired(), Email()])
+    password = PasswordField('Пароль')
     remember_me = BooleanField('Запомнить меня')
     submit = SubmitField('Войти')
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route("/login", methods=['GET', 'POST'])
 def login():
-    global current_user
+    global db_sess
     form = LoginForm()
+    if current_user.is_authenticated:
+        return redirect('/')
+
     if form.validate_on_submit():
-        db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.email == form.email.data).first()
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
-            return redirect("/")
+            return redirect('/')
         return render_template('login.html',
                                message="Неправильный логин или пароль",
-                               form=form)
-    if request.method == 'POST':
-        user = Users()
-        user.username = request.form['form-control']
-        user.password = request.form['form-control1']
-        session.add(user)
-        session.commit()
-        session.close()
-    return render_template('login.html', title='Авторизация', form=form)
+                               form=form,
+                               current_user=current_user)
+    return render_template('login.html', title='Авторизация', form=form, current_user=current_user)
 
 
 if __name__ == '__main__':
