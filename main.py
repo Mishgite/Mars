@@ -7,8 +7,8 @@ from data import db_session
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from requests import session
-from wtforms import StringField, PasswordField, SubmitField, EmailField, BooleanField
-from wtforms.validators import DataRequired, Email
+from wtforms import StringField, PasswordField, SubmitField, EmailField, BooleanField, IntegerField, DateField
+from wtforms.validators import DataRequired, Email, NumberRange
 from flask_wtf import FlaskForm
 from flask_login import login_user, current_user, LoginManager
 from data.jobs import Job
@@ -96,6 +96,38 @@ def form_sample():
                         </div>
                       </body>
                     </html>'''.format(image_or_not='<img src="static/img/test_image_01.png" width=400 alt="здесь должна была быть картинка, но не нашлась">' if image else '')
+
+
+class Registr(FlaskForm):
+    email = StringField('Почта', validators=[DataRequired(), Email()])
+    password = PasswordField('Пароль', validators=[DataRequired()])
+    repeat_password = PasswordField('Повторите пароль', validators=[DataRequired()])
+    surname = StringField('Фамилия', validators=[DataRequired()])
+    name = StringField('Имя', validators=[DataRequired()])
+    age = IntegerField('Возраст', validators=[DataRequired(), NumberRange(1, 150)])
+    position = StringField('Должность', validators=[DataRequired()])
+    speciality = StringField('Работа', validators=[DataRequired()])
+    address = StringField('Модуль', validators=[DataRequired()])
+    submit = SubmitField('Зарегистрироваться')
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = Registr()
+    if form.validate_on_submit():
+        user = User()
+        user.surname = form.surname.data
+        user.name = form.name.data
+        user.email = form.email.data
+        user.hashed_password = form.password.data
+        user.age = form.age.data
+        user.position = form.position.data
+        user.speciality = form.speciality.data
+        user.address = form.address.data
+        db_sess.add(user)
+        db_sess.commit()
+
+    return render_template('register.html', form=form)
 
 
 @app.route('/answer')
