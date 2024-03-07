@@ -199,19 +199,23 @@ class Registr_Jobs(FlaskForm):
     job = StringField('Название работы', validators=[DataRequired()])
     work_size = StringField('Время работы', validators=[DataRequired(), NumberRange(1, 1500)])
     collaborators = StringField('ID других участников', validators=[DataRequired()])
+    remember_me = BooleanField('Работа выполнена')
     submit = SubmitField('Добавить')
 
 
 @app.route('/register_jobs', methods=['GET', 'POST'])
 def register_jobs():
     form = Registr_Jobs()
+    if current_user.is_authenticated:
+        return redirect('/')
+
     if request.method == 'POST':
         job = Job()
         job.team_leader_id = form.team_leader_id.data
         job.job = form.job.data
         job.work_size = form.work_size.data
         job.collaborators = form.collaborators.data
-        job.is_finished = 0
+        job.is_finished = form.remember_me.data
         db_sess.add(job)
         db_sess.commit()
 
