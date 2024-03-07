@@ -194,6 +194,30 @@ def login():
     return render_template('login.html', title='Авторизация', form=form)
 
 
+class Registr_Jobs(FlaskForm):
+    team_leader_id = StringField('ID тим-лидера', validators=[DataRequired(), NumberRange(1, 1500)])
+    job = StringField('Название работы', validators=[DataRequired()])
+    work_size = StringField('Время работы', validators=[DataRequired(), NumberRange(1, 1500)])
+    collaborators = StringField('ID других участников', validators=[DataRequired()])
+    submit = SubmitField('Добавить')
+
+
+@app.route('/register_jobs', methods=['GET', 'POST'])
+def register_jobs():
+    form = Registr_Jobs()
+    if request.method == 'POST':
+        job = Job()
+        job.team_leader_id = form.team_leader_id.data
+        job.job = form.job.data
+        job.work_size = form.work_size.data
+        job.collaborators = form.collaborators.data
+        job.is_finished = 0
+        db_sess.add(job)
+        db_sess.commit()
+
+    return render_template('register_jobs.html', form=form)
+
+
 if __name__ == '__main__':
     app.config['SECRET_KEY'] = 'random_key'
     app.run(port=5000, host='127.0.0.1')
