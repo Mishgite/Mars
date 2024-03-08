@@ -209,6 +209,7 @@ def logout():
     logout_user()
     return redirect("/")
 
+
 @app.route('/register_jobs', methods=['GET', 'POST'])
 def register_jobs():
     form = Registr_Jobs()

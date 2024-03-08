@@ -1,6 +1,6 @@
 import flask
-from flask import jsonify
-
+from flask import jsonify, request
+import datetime
 from data import db_session
 from data.jobs import Job
 
@@ -38,3 +38,21 @@ def api_jobs(job_id):
                     for item in jobs]
         }
     )
+
+
+@blueprint.route('/api/jobs', methods=['POST'])
+def add_job():
+    db_sess = db_session.create_session()
+    job = Job()
+    job.team_leader_id = request.json['team_leader_id']
+    job.job = request.json['job']
+    job.work_size = request.json['work_size']
+    job.start_date = datetime.datetime.strptime(request.json['start_date'], '%Y-%m-%d %H:%M:%S.%f')
+    job.end_date = datetime.datetime.strptime(request.json['end_date'], '%Y-%m-%d %H:%M:%S.%f')
+    job.is_finished = request.json['is_finished']
+    job.collaborators = request.json['collaborators']
+
+    db_sess.add(job)
+    db_sess.commit()
+
+    return jsonify({'id': job.id})
