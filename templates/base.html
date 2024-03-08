@@ -24,7 +24,7 @@
 <div class="first_line">
     <h1 class="first_line_content">Миссия Колонизация Марса</h1>
     {% if current_user.is_authenticated %}
-        <h3>{{ current_user.name }}</h3>
+        <h3><a href="http://localhost:5000/logout">{{ current_user.name }}</a></h3>
     {% else %}
         <h3 class="first_line_content"><a href="http://localhost:5000/login">Войти</a></h3>
     {% endif %}

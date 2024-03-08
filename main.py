@@ -10,7 +10,7 @@ from requests import session
 from wtforms import StringField, PasswordField, SubmitField, EmailField, BooleanField, IntegerField, DateField
 from wtforms.validators import DataRequired, Email, NumberRange
 from flask_wtf import FlaskForm
-from flask_login import login_user, current_user, LoginManager
+from flask_login import login_user, current_user, LoginManager, logout_user, login_required
 from data.jobs import Job
 from data.users import User
 
@@ -202,6 +202,12 @@ class Registr_Jobs(FlaskForm):
     remember_me = BooleanField('Работа выполнена')
     submit = SubmitField('Добавить')
 
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect("/")
 
 @app.route('/register_jobs', methods=['GET', 'POST'])
 def register_jobs():
