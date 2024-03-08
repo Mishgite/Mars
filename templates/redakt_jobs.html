@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Форма редактирования работы</h2>
+  <form action="" method="post" novalidate>
+    {{ form.hidden_tag() }}
+    {% for elem in [form.team_leader_id, form.job, form.work_size, form.collaborators] %}
+      <p>
+          {{ elem.label }}
+          {{ elem(class="form-control") }}
+          {% for error in elem.errors %}
+              <div class="alert alert-danger" role="alert">
+                  {{ error }}
+              </div>
+          {% endfor %}
+      </p>
+    {% endfor %}
+    <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+  </form>
+{% endblock %}

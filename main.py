@@ -1,4 +1,4 @@
-from flask import Flask, url_for, request, render_template, redirect
+from flask import Flask, url_for, request, render_template, redirect, abort
 import sqlalchemy
 import json
 import random
@@ -227,6 +227,54 @@ def register_jobs():
         db_sess.commit()
 
     return render_template('register_jobs.html', form=form)
+
+
+class JobForm(FlaskForm):
+    team_leader_id = IntegerField('ID лидера', validators=[DataRequired()])
+    job = StringField('Название работы', validators=[DataRequired()])
+    work_size = IntegerField('Время работы', validators=[DataRequired()])
+    collaborators = StringField('ID других участников', validators=[DataRequired()])
+    is_finished = BooleanField('Работа завершена?', default=False)
+    submit = SubmitField("Готово")
+
+
+@app.route('/job/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_job(id: int):
+    form = JobForm()
+    if request.method == 'GET':
+        db_sess = db_session.create_session()
+        if current_user.id == 1:
+            job = db_sess.query(Job).filter(Job.id == id).first()
+        else:
+            job = db_sess.query(Job).filter(Job.id == id,
+                                                 Job.team_leader == current_user).first()
+        if job:
+            form.team_leader_id.data = job.team_leader_id
+            form.job.data = job.job
+            form.work_size.data = job.work_size
+            form.collaborators.data = job.collaborators
+            form.is_finished.data = job.is_finished
+        else:
+            abort(404)
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        if current_user.id == 1:
+            job = db_sess.query(Job).filter(Job.id == id).first()
+        else:
+            job = db_sess.query(Job).filter(Job.id == id,
+                                            Job.team_leader == current_user).first()
+        if job:
+            job.team_leader_id = form.team_leader_id.data
+            job.job = form.job.data
+            job.work_size = form.work_size.data
+            job.collaborators = form.collaborators.data
+            job.is_finished = form.is_finished.data
+            db_sess.commit()
+            return redirect('/')
+        else:
+            abort(404)
+    return render_template('add_job.html', title='Изменить работу', form=form)
 
 
 if __name__ == '__main__':
