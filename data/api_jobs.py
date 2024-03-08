@@ -30,6 +30,8 @@ def get_jobs():
 def api_jobs(job_id):
     db_sess = db_session.create_session()
     jobs = db_sess.query(Job).filter(Job.id == job_id)
+    if not jobs:
+        return make_response(jsonify({'error': 'Not found'}), 404)
     return jsonify(
         {
             'jobs':
