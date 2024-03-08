@@ -47,8 +47,7 @@ def add_job():
     job.team_leader_id = request.json['team_leader_id']
     job.job = request.json['job']
     job.work_size = request.json['work_size']
-    job.start_date = datetime.datetime.strptime(request.json['start_date'], '%Y-%m-%d %H:%M:%S.%f')
-    job.end_date = datetime.datetime.strptime(request.json['end_date'], '%Y-%m-%d %H:%M:%S.%f')
+    job.start_date = datetime.datetime.strptime(request.json['start_date'])
     job.is_finished = request.json['is_finished']
     job.collaborators = request.json['collaborators']
 
