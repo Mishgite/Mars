@@ -3,6 +3,7 @@ from flask import jsonify, request, make_response
 import datetime
 from data import db_session
 from data.jobs import Job
+from data.users import User
 
 
 blueprint = flask.Blueprint(

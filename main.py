@@ -230,8 +230,9 @@ def register_jobs():
 
 
 if __name__ == '__main__':
-    from data import api_jobs
+    from data import api_jobs, api_users
     app.config['DEBUG'] = True
     app.config['SECRET_KEY'] = 'random_key'
     app.register_blueprint(api_jobs.blueprint)
+    app.register_blueprint(api_users.blueprint)
     app.run(port=5000, host='127.0.0.1')
