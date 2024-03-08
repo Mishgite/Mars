@@ -277,6 +277,23 @@ def edit_job(id: int):
     return render_template('add_job.html', title='Изменить работу', form=form)
 
 
+@app.route('/job_delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def job_delete(id: int):
+    db_sess = db_session.create_session()
+    if current_user.id == 1:
+        job = db_sess.query(Job).filter(Job.id == id).first()
+    else:
+        job = db_sess.query(Job).filter(Job.id == id,
+                                        Job.team_leader == current_user).first()
+    if job:
+        db_sess.delete(job)
+        db_sess.commit()
+    else:
+        abort(404)
+    return redirect('/')
+
+
 if __name__ == '__main__':
     from data import api_jobs, api_users
     app.config['DEBUG'] = True
