@@ -1,5 +1,5 @@
 import flask
-from flask import jsonify, request
+from flask import jsonify, request, make_response
 import datetime
 from data import db_session
 from data.jobs import Job
@@ -42,6 +42,10 @@ def api_jobs(job_id):
 
 @blueprint.route('/api/jobs', methods=['POST'])
 def add_job():
+    if not request.json:
+        return make_response(jsonify({'error': 'Empty request'}), 400)
+    elif not all(key in request.json for key in ['team_leader_id', 'job', 'work_size', 'start_date', 'end_date', 'is_finished', 'collaborators']):
+        return make_response(jsonify({'error': 'Bad request'}), 400)
     db_sess = db_session.create_session()
     job = Job()
     job.team_leader_id = request.json['team_leader_id']
@@ -55,3 +59,15 @@ def add_job():
     db_sess.commit()
 
     return jsonify({'id': job.id})
+
+
+@blueprint.route('/api/jobs/<int:job_id>', methods=['DELETE'])
+def delete_job(job_id: int):
+    db_sess = db_session.create_session()
+    job = db_sess.query(Job).get(job_id)
+    if not job:
+        return make_response(jsonify({'error': 'Not found'}), 404)
+    db_sess.delete(job)
+    db_sess.commit()
+
+    return jsonify({'success': 'OK'})
