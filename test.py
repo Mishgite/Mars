@@ -1,26 +1,6 @@
-import flask
-from flask import jsonify
+from requests import get
 
-from data import db_session
-from data.jobs import Job
-
-
-blueprint = flask.Blueprint(
-    'jobs_api',
-    __name__,
-    template_folder='templates'
-)
-
-
-@blueprint.route('/api/jobs')
-def get_jobs():
-    db_sess = db_session.create_session()
-    jobs = db_sess.query(Job).all()
-    return jsonify(
-        {
-            'jobs':
-                [item.to_dict(only=(
-                    "team_leader_id", "job", "work_size", "collaborators", "start_date", "end_date", "is_finished"))
-                 for item in jobs]
-        }
-    )
+print(get('http://127.0.0.1:5000/api/jobs').json())
+print(get('http://127.0.0.1:5000/api/jobs/3').json())
+print(get('http://127.0.0.1:5000/api/jobs/8').json())
+print(get('http://127.0.0.1:5000/api/jobs/r').json())
