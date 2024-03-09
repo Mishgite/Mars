@@ -7,7 +7,7 @@
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
           crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
     <title>{{title}}</title>
     <script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.js"></script>
     <script type="text/javascript"
@@ -24,9 +24,10 @@
 <div class="first_line">
     <h1 class="first_line_content">Миссия Колонизация Марса</h1>
     {% if current_user.is_authenticated %}
-        <h3><a href="http://localhost:5000/logout">{{ current_user.name }}</a></h3>
+        <a href="http://localhost:5000/logout">{{ current_user.name }}</a>
     {% else %}
-        <h3 class="first_line_content"><a href="http://localhost:5000/login">Войти</a></h3>
+        <a href="http://localhost:5000/register">Зарегестрироваться</a>
+        <a href="http://localhost:5000/login">Войти</a>
     {% endif %}
 </div>
 <h4>И на Марсе будут яблони цвести!</h4>
