@@ -13,6 +13,7 @@ from flask_wtf import FlaskForm
 from flask_login import login_user, current_user, LoginManager, logout_user, login_required
 from data.jobs import Job
 from data.users import User
+from data.dapartament import Department
 
 
 app = Flask(__name__)
@@ -292,6 +293,40 @@ def job_delete(id: int):
     else:
         abort(404)
     return redirect('/')
+
+
+class Form_Department(FlaskForm):
+    title = StringField('Название департамента', validators=[DataRequired()])
+    chief_id = IntegerField('ID лидера', validators=[DataRequired()])
+    members = StringField('Жители', validators=[DataRequired()])
+    email = StringField('Почта', validators=[Email(), DataRequired()])
+    submit = SubmitField("Готово")
+
+@app.route('/departament')
+def departments():
+    db_sess = db_session.create_session()
+    departments = db_sess.query(Department).all()
+    return render_template('departament.html', title='Департаменты', departments=departments)
+
+
+@app.route('/add_departament', methods=['GET', 'POST'])
+@login_required
+def add_departments():
+    form = Form_Department()
+
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        department = Department()
+        department.title = form.title.data
+        department.chief_id = form.chief_id.data
+        department.members = form.members.data
+        department.email = form.email.data
+        db_sess.add(department)
+        db_sess.commit()
+
+        return redirect('/departament')
+
+    return render_template('add_departament.html', title="Добавить департамент", form=form)
 
 
 if __name__ == '__main__':

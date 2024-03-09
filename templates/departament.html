@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2 align="center">Departments</h2>
+    {% if current_user.is_authenticated %}
+        <div class="edit_jobs">
+            <a href="http://localhost:5000/add_departament">Добавить</a>
+        </div>
+    {% endif %}
+    <div class="edit_jobs">
+        <a href="/">Вернуться к работам</a>
+    </div>
+    {% for item in departments %}
+        <h3>Department {{ loop.index }}</h3>
+        <table class="tbl">
+            <tr class="mn">
+                <td>Title of department</td>
+                <td>Chief</td>
+                <td>Members</td>
+                <td>Email</td>
+            </tr>
+            <tr>
+                <td>{{ item.title }}</td>
+                <td>{{ item.chief.surname }} {{ item.chief.name }}</td>
+                <td>{{ item.members }}</td>
+                <td>{{ item.email }}</td>
+            </tr>
+        </table>
+        {% if current_user.is_authenticated and current_user == item.chief or current_user.id == 1 %}
+            <div class="edit_jobs">
+                <a href="/edit_departments/{{ item.id }}">Изменить</a>
+                <a href="/departments_delete/{{ item.id }}">Удалить</a>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
