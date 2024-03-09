@@ -358,7 +358,7 @@ def edit_departments(id: int):
             department.members = form.members.data
             department.email = form.email.data
             db_sess.commit()
-            return redirect('/departments'
+            return redirect('/departments')
     return render_template('add_departament.html', title='Изменить департамент', form=form)
 
 
