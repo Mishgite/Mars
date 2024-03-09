@@ -329,6 +329,55 @@ def add_departments():
     return render_template('add_departament.html', title="Добавить департамент", form=form)
 
 
+@app.route('/edit_departments/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_departments(id: int):
+    form = Form_Department()
+    if request.method == 'GET':
+        db_sess = db_session.create_session()
+        if current_user.id == 1:
+            department = db_sess.query(Department).filter(Department.id == id).first()
+        else:
+            department = db_sess.query(Job).filter(Department.id == id,
+                                                 Department.chief == current_user).first()
+        if department:
+            form.title.data = department.title
+            form.chief_id.data = department.chief_id
+            form.members.data = department.members
+            form.email.data = department.email
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        if current_user.id == 1:
+            department = db_sess.query(Department).filter(Department.id == id).first()
+        else:
+            department = db_sess.query(Job).filter(Department.id == id,
+                                                   Department.chief == current_user).first()
+        if department:
+            department.title = form.title.data
+            department.chief_id = form.chief_id.data
+            department.members = form.members.data
+            department.email = form.email.data
+            db_sess.commit()
+            return redirect('/departments'
+    return render_template('add_departament.html', title='Изменить департамент', form=form)
+
+
+@app.route('/departments_delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def departments_delete(id: int):
+    db_sess = db_session.create_session()
+    if current_user.id == 1:
+        department = db_sess.query(Department).filter(Department.id == id).first()
+    else:
+        department = db_sess.query(Job).filter(Department.id == id,
+                                               Department.chief == current_user).first()
+    if department:
+        db_sess.delete(department)
+        db_sess.commit()
+
+    return redirect('/departament')
+
+
 if __name__ == '__main__':
     from data import api_jobs, api_users
     app.config['DEBUG'] = True
