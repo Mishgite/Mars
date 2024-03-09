@@ -21,7 +21,7 @@ def get_jobs():
         {
             'users':
                 [item.to_dict(only=(
-                    "id", "surname", "name", "age", "position", "speciality", "address", "email", "hashed_password", "modified_date"))
+                    "id", "surname", "name", "age", "position", "speciality", "address", "email", "hashed_password", "modified_date", "city"))
                  for item in jobs]
         }
     )
@@ -37,7 +37,7 @@ def api_jobs(job_id):
         {
             'jobs':
                 [item.to_dict(only=(
-                    "id", "surname", "name", "age", "position", "speciality", "address", "email", "hashed_password", "modified_date"))
+                    "id", "surname", "name", "age", "position", "speciality", "address", "email", "hashed_password", "modified_date", "city"))
                     for item in jobs]
         }
     )
@@ -47,7 +47,7 @@ def api_jobs(job_id):
 def add_job():
     if not request.json:
         return make_response(jsonify({'error': 'Empty request'}), 400)
-    elif not all(key in request.json for key in ["id", "surname", "name", "age", "position", "speciality", "address", "email", "hashed_password", "modified_date"]):
+    elif not all(key in request.json for key in ["id", "surname", "name", "age", "position", "speciality", "address", "email", "hashed_password", "modified_date", "city"]):
         return make_response(jsonify({'error': 'Bad request'}), 400)
     db_sess = db_session.create_session()
     user = User()
@@ -60,6 +60,7 @@ def add_job():
     user.email = request.json['email']
     user.hashed_password = request.json['hashed_password']
     user.modified_date = datetime.datetime.strptime(request.json['modified_date'])
+    user.city = request.json['city']
 
     db_sess.add(user)
     db_sess.commit()
@@ -86,7 +87,7 @@ def edit_job(job_id: int):
 
     if not user:
         return make_response(jsonify({'error': 'Empty request'}), 404)
-    elif not all(key in ["id", "surname", "name", "age", "position", "speciality", "address", "email", "hashed_password", "modified_date"] for key in request.json):
+    elif not all(key in ["id", "surname", "name", "age", "position", "speciality", "address", "email", "hashed_password", "modified_date", "city"] for key in request.json):
         return make_response(jsonify({'error': 'Wrong request'}), 404)
 
     for key in request.json:
@@ -108,6 +109,8 @@ def edit_job(job_id: int):
             user.hashed_password = request.json['hashed_password']
         elif key == 'modified_date':
             user.modified_date = datetime.datetime.strptime(request.json['modified_date'])
+        elif key == 'city':
+            user.city = request.json['city']
 
     db_sess.add(user)
     db_sess.commit()

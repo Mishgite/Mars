@@ -1,5 +1,5 @@
 from flask import Flask, url_for, request, render_template, redirect, abort
-import sqlalchemy
+import requests
 import json
 import random
 import sqlite3
@@ -327,6 +327,38 @@ def add_departments():
         return redirect('/departament')
 
     return render_template('add_departament.html', title="Добавить департамент", form=form)
+
+
+@app.route('/user_show/<int:id>')
+def user_show(id: int):
+    user = requests.get(f'http://127.0.0.1:5000/api/users/{id}').json()
+
+    geocoder_api_server = "http://geocode-maps.yandex.ru/1.x/"
+
+    geocoder_params = {
+        "apikey": "40d1649f-0493-4b70-98ba-98533de7710b",
+        "geocode": user['jobs'][0]['city'],
+        "format": "json"}
+
+    response = requests.get(geocoder_api_server, params=geocoder_params)
+    json_response = response.json()
+    toponym = json_response["response"]["GeoObjectCollection"][
+        "featureMember"][0]["GeoObject"]
+    toponym_coodrinates = toponym["Point"]["pos"]
+    toponym_longitude, toponym_lattitude = toponym_coodrinates.split(" ")
+    map_params = {
+        "apikey": 'be02e27d-583b-4aad-b55e-9787d9d25384',
+        "z": 10,
+        "ll": ",".join([toponym_longitude, toponym_lattitude]),
+        "l": "map"
+    }
+    map_api_server = "https://static-maps.yandex.ru/v1?"
+    response = requests.get(map_api_server, params=map_params)
+
+    with open('static/img/temp_image.jpg', 'wb') as image_file:
+        image_file.write(response.content)
+
+    return render_template('city_users.html', user=user)
 
 
 @app.route('/edit_departments/<int:id>', methods=['GET', 'POST'])
