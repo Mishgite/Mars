@@ -214,7 +214,7 @@ def logout():
 @app.route('/register_jobs', methods=['GET', 'POST'])
 def register_jobs():
     form = Registr_Jobs()
-    if current_user.is_authenticated:
+    if not current_user.is_authenticated:
         return redirect('/')
 
     if request.method == 'POST':
@@ -226,6 +226,7 @@ def register_jobs():
         job.is_finished = form.remember_me.data
         db_sess.add(job)
         db_sess.commit()
+        return redirect('/')
 
     return render_template('register_jobs.html', form=form)
 
@@ -301,6 +302,7 @@ class Form_Department(FlaskForm):
     members = StringField('Жители', validators=[DataRequired()])
     email = StringField('Почта', validators=[Email(), DataRequired()])
     submit = SubmitField("Готово")
+
 
 @app.route('/departament')
 def departments():
