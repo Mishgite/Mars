@@ -47,6 +47,7 @@ db_sess = db_session.create_session()
 @app.route('/')
 def works_log():
     jobs = db_sess.query(Job).all()
+    print(jobs)
     return render_template('jobs.html', title='Журнал работ', jobs=jobs)
 
 
@@ -200,6 +201,7 @@ class Registr_Jobs(FlaskForm):
     job = StringField('Название работы', validators=[DataRequired()])
     work_size = StringField('Время работы', validators=[DataRequired(), NumberRange(1, 1500)])
     collaborators = StringField('ID других участников', validators=[DataRequired()])
+    category = StringField('Категория работы', validators=[DataRequired(), NumberRange(1, 1500)])
     remember_me = BooleanField('Работа выполнена')
     submit = SubmitField('Добавить')
 
@@ -223,6 +225,7 @@ def register_jobs():
         job.job = form.job.data
         job.work_size = form.work_size.data
         job.collaborators = form.collaborators.data
+        job.category = form.category.data
         job.is_finished = form.remember_me.data
         db_sess.add(job)
         db_sess.commit()
@@ -236,6 +239,7 @@ class JobForm(FlaskForm):
     job = StringField('Название работы', validators=[DataRequired()])
     work_size = IntegerField('Время работы', validators=[DataRequired()])
     collaborators = StringField('ID других участников', validators=[DataRequired()])
+    category = StringField('Категория работы', validators=[DataRequired(), NumberRange(1, 1500)])
     is_finished = BooleanField('Работа завершена?', default=False)
     submit = SubmitField("Готово")
 
@@ -256,6 +260,7 @@ def edit_job(id: int):
             form.job.data = job.job
             form.work_size.data = job.work_size
             form.collaborators.data = job.collaborators
+            form.category.data = job.category
             form.is_finished.data = job.is_finished
         else:
             abort(404)
@@ -271,6 +276,7 @@ def edit_job(id: int):
             job.job = form.job.data
             job.work_size = form.work_size.data
             job.collaborators = form.collaborators.data
+            form.category.data = job.category
             job.is_finished = form.is_finished.data
             db_sess.commit()
             return redirect('/')

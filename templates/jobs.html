@@ -4,7 +4,7 @@
     <h2 align="center">Works log</h2>
     {% if current_user.is_authenticated %}
         <div class="edit_jobs">
-            <a href="http://localhost:5000/job">Добавить</a>
+            <a href="http://localhost:5000/register_jobs">Добавить</a>
         </div>
     {% endif %}
     <div class="edit_jobs">
@@ -18,6 +18,7 @@
                 <td>Team leader</td>
                 <td>Duration</td>
                 <td>List of collaborators</td>
+                <td>Hazard category</td>
                 <td>Is finished</td>
             </tr>
             <tr>
@@ -25,6 +26,7 @@
                 <td>{{ job.team_leader.name }} {{ job.team_leader.surname }}</td>
                 <td>{{ job.work_size }} hours</td>
                 <td>{{ job.collaborators }}</td>
+                <td>{{  job.category  }}</td>
                 <td>{% if job.is_finished == 0 %} Is not finished {% else %} Finished {% endif %}</td>
             </tr>
         </table>
