@@ -14,28 +14,33 @@ blueprint = flask.Blueprint(
 )
 
 
-@blueprint.route('/api/v2/users')
-def get_users():
-    user = UsersResource()
-    return jsonify(
-        {
-            'users':
-                [item.to_dict(only=(
-                    "id", "surname", "name", "age", "position", "speciality", "address", "email", "hashed_password", "modified_date", "city"))
-                 for item in user.get()]
-        }
-    )
-
-
 @blueprint.route('/api/v2/users/<int:user_id>')
-def get_users1(user_id):
+def get_users(user_id):
+    user = UsersResource()
+    return user.get(user_id)
+
+
+@blueprint.route('/api/v2/users', methods=['POST'])
+def add_job():
+    user = UsersResource()
+    return user.post()
+
+
+@blueprint.route('/api/v2/users/<int:user_id>', methods=['DELETE'])
+def get_users(user_id):
+    user = UsersResource()
+    return user.delete(user_id)
+
+
+@blueprint.route('/api/v2/users')
+def get_users1():
     user = UsersListResource()
     return jsonify(
         {
             'users':
                 [item.to_dict(only=(
                     "id", "surname", "name", "age", "position", "speciality", "address", "email", "hashed_password", "modified_date", "city"))
-                 for item in user.get(user_id)]
+                 for item in user.get()]
         }
     )
 
