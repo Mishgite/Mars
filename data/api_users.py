@@ -4,6 +4,7 @@ import datetime
 from data import db_session
 from data.jobs import Job
 from data.users import User
+from data.users_resource import UsersResource, UsersListResource
 
 
 blueprint = flask.Blueprint(
@@ -11,6 +12,32 @@ blueprint = flask.Blueprint(
     __name__,
     template_folder='templates'
 )
+
+
+@blueprint.route('/api/v2/users')
+def get_users():
+    user = UsersResource()
+    return jsonify(
+        {
+            'users':
+                [item.to_dict(only=(
+                    "id", "surname", "name", "age", "position", "speciality", "address", "email", "hashed_password", "modified_date", "city"))
+                 for item in user.get()]
+        }
+    )
+
+
+@blueprint.route('/api/v2/users/<int:user_id>')
+def get_users1(user_id):
+    user = UsersListResource()
+    return jsonify(
+        {
+            'users':
+                [item.to_dict(only=(
+                    "id", "surname", "name", "age", "position", "speciality", "address", "email", "hashed_password", "modified_date", "city"))
+                 for item in user.get(user_id)]
+        }
+    )
 
 
 @blueprint.route('/api/users')
