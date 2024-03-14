@@ -4,6 +4,7 @@ import json
 import random
 import sqlite3
 from data import db_session
+from flask_restful import abort, Api
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from requests import session
@@ -14,9 +15,11 @@ from flask_login import login_user, current_user, LoginManager, logout_user, log
 from data.jobs import Job
 from data.users import User
 from data.dapartament import Department
+from data.users_resource import UsersResource, UsersListResource
 
 
 app = Flask(__name__)
+api = Api(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -422,6 +425,8 @@ if __name__ == '__main__':
     from data import api_jobs, api_users
     app.config['DEBUG'] = True
     app.config['SECRET_KEY'] = 'random_key'
+    api.add_resource(UsersResource, '/api/v2/users/<int:user_id>')
+    api.add_resource(UsersListResource, '/api/v2/users')
     app.register_blueprint(api_jobs.blueprint)
     app.register_blueprint(api_users.blueprint)
     app.run(port=5000, host='127.0.0.1')
