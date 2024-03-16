@@ -16,6 +16,7 @@ from data.jobs import Job
 from data.users import User
 from data.dapartament import Department
 from data.users_resource import UsersResource, UsersListResource
+from data.jobs_resource import JobsResource, JobsListResource
 
 
 app = Flask(__name__)
@@ -427,6 +428,8 @@ if __name__ == '__main__':
     app.config['SECRET_KEY'] = 'random_key'
     api.add_resource(UsersResource, '/api/v2/users/<int:user_id>')
     api.add_resource(UsersListResource, '/api/v2/users')
+    api.add_resource(JobsResource, '/api/v2/jobs/<int:user_id>')
+    api.add_resource(JobsListResource, '/api/v2/jobs')
     app.register_blueprint(api_jobs.blueprint)
     app.register_blueprint(api_users.blueprint)
     app.run(port=5000, host='127.0.0.1')
