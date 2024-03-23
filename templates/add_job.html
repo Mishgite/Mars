@@ -4,7 +4,7 @@
     <h1>Изменить работу</h1>
     <form action="" method="post">
         {{ form.hidden_tag() }}
-        {% for elem in [form.team_leader_id, form.job, form.work_size, form.collaborators] %}
+        {% for elem in [form.team_leader_id, form.job, form.work_size, form.collaborators, form.category] %}
             <p>
                 {{ elem.label }}
                 {{ elem(class="form-control") }}
