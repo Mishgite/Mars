@@ -26,9 +26,13 @@
                 <td>{{ job.team_leader.name }} {{ job.team_leader.surname }}</td>
                 <td>{{ job.work_size }} hours</td>
                 <td>{{ job.collaborators }}</td>
-                <td>{% for categor in category %}
-                    {% if categor.id == job.category %}
-                        {{  categor.category  }}
+                <td>{% for categorid in category_id %}
+                    {% if categorid.job_id == job.id %}
+                        {% for categor in category %}
+                        {% if categor.id == categorid.category_id %}
+                            {{  categor.category  }}
+                        {% endif %}
+                        {% endfor %}
                     {% endif %}
                     {% endfor %}
                 </td>

@@ -18,6 +18,7 @@ from data.dapartament import Department
 from data.users_resource import UsersResource, UsersListResource
 from data.jobs_resource import JobsResource, JobsListResource
 from data.category import Category
+from data.category_id import Category_id
 
 
 app = Flask(__name__)
@@ -52,8 +53,10 @@ db_sess = db_session.create_session()
 @app.route('/')
 def works_log():
     jobs = db_sess.query(Job).all()
+    category_id = db_sess.query(Category_id).all()
     category = db_sess.query(Category).all()
-    return render_template('jobs.html', title='Журнал работ', jobs=jobs, category=category)
+    return render_template('jobs.html', title='Журнал работ', jobs=jobs,
+                           category=category, category_id=category_id)
 
 
 @app.route('/promotion')
@@ -254,6 +257,7 @@ class JobForm(FlaskForm):
 def edit_job(id: int):
     form = JobForm()
     category = Category()
+    category_id = Category_id()
     if request.method == 'GET':
         db_sess = db_session.create_session()
         if current_user.id == 1:
@@ -288,7 +292,8 @@ def edit_job(id: int):
             return redirect('/')
         else:
             abort(404)
-    return render_template('add_job.html', title='Изменить работу', form=form, category=category)
+    return render_template('add_job.html', title='Изменить работу',
+                           form=form, category=category)
 
 
 @app.route('/job_delete/<int:id>', methods=['GET', 'POST'])
