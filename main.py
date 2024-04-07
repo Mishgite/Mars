@@ -257,7 +257,6 @@ class JobForm(FlaskForm):
 def edit_job(id: int):
     form = JobForm()
     category = Category()
-    category_id = Category_id()
     if request.method == 'GET':
         db_sess = db_session.create_session()
         if current_user.id == 1:
@@ -270,7 +269,6 @@ def edit_job(id: int):
             form.job.data = job.job
             form.work_size.data = job.work_size
             form.collaborators.data = job.collaborators
-            form.category.data = job.category
             form.is_finished.data = job.is_finished
         else:
             abort(404)
@@ -278,15 +276,18 @@ def edit_job(id: int):
         db_sess = db_session.create_session()
         if current_user.id == 1:
             job = db_sess.query(Job).filter(Job.id == id).first()
+            category_id = db_sess.query(Category_id).filter(Category_id.job_id == job.id).first()
         else:
             job = db_sess.query(Job).filter(Job.id == id,
                                             Job.team_leader == current_user).first()
+            category_id = db_sess.query(Category_id).filter(Category_id.job_id == job.id,
+                                                            Job.team_leader == current_user).first()
         if job:
             job.team_leader_id = form.team_leader_id.data
             job.job = form.job.data
             job.work_size = form.work_size.data
             job.collaborators = form.collaborators.data
-            form.category.data = job.category
+            category_id.category_id = form.category.data
             job.is_finished = form.is_finished.data
             db_sess.commit()
             return redirect('/')
