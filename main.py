@@ -226,8 +226,16 @@ def register_jobs():
     form = Registr_Jobs()
     con = sqlite3.connect("db/database.db")
     cur = con.cursor()
-    result = cur.execute("""SELECT id FROM jobs""").fetchall()[-1][-1]
-    result1 = cur.execute("""SELECT id FROM category_id""").fetchall()[-1][-1]
+    result = cur.execute("""SELECT id FROM jobs""").fetchall()
+    if result != []:
+        result = result[-1][-1]
+    else:
+        result = 1
+    result1 = cur.execute("""SELECT id FROM category_id""").fetchall()
+    if result1 != []:
+        result1 = result1[-1][-1]
+    else:
+        result1 = 1
     if not current_user.is_authenticated:
         return redirect('/')
 
@@ -237,7 +245,12 @@ def register_jobs():
         job.job = form.job.data
         job.work_size = form.work_size.data
         job.collaborators = form.collaborators.data
-        cur.execute(f"""INSERT INTO category_id VALUES ({int(result1) + 1}, {result + 1}, {int(form.category.data)})""")
+        if len(form.category.data.split(',')) > 1:
+            for i in form.category.data.split(','):
+                cur.execute(f"""INSERT INTO category_id VALUES ({int(result1)}, {result + 1}, {i})""")
+                result1 += 1
+        else:
+            cur.execute(f"""INSERT INTO category_id VALUES ({int(result1) + 1}, {result + 1}, {int(form.category.data)})""")
         con.commit()
         job.is_finished = form.remember_me.data
         db_sess.add(job)
