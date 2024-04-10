@@ -230,12 +230,12 @@ def register_jobs():
     if result != []:
         result = result[-1][-1]
     else:
-        result = 1
+        result = 0
     result1 = cur.execute("""SELECT id FROM category_id""").fetchall()
     if result1 != []:
         result1 = result1[-1][-1]
     else:
-        result1 = 1
+        result1 = 0
     if not current_user.is_authenticated:
         return redirect('/')
 
